@@ -1,7 +1,7 @@
 /*
-     Title:     
-     Author:    
-     Date:      
+     Title:     program2.cpp
+     Author:    Sharon Colson
+     Date:      November 2023
      Purpose:   Traveling Salesman - find the lowest cost
                 tour when traveling from US to 8 other countries
                 and then back to US.
@@ -33,9 +33,9 @@ void printStringArray(string* arr, int size);
 
 int main()
 {	
-	Tour *tourOptions = new Tour[40320];
+	// Tour *tourOptions = new Tour[40320];
 	//read in the flight information from the file and then create the weight matrix
-	GraphMatrix * matrix = readFileMakeMatrix();
+	// GraphMatrix * matrix = readFileMakeMatrix();
 	string * countries = new string[SIZE-2];
 	
 	cout << "\n\n*************************COUNTRIES*******************\n";
@@ -67,15 +67,40 @@ int main()
 	It is returning the index value in the COUNTRY_CODES array.	
 	Implement this search function with the binary search algorithm!
 */
-int searchCountryCode(string)
-{
 
+// ********** Consider making this a recursive function, arguments will need to be adjusted. 
+int searchCountryCode(string country)
+{	
+	// Set the starting search parameter
+	int left = 0;
+	// Set the ending search parameter
+	int right = SIZE - 3; // Excluding US and we only 
+	// want to search n - 1. 
+	while (left <= right)
+	{	// find the mid-point
+		int middle = left + (right - left)/2;
+		// Check to verify if the mid-point is
+		// the country code we are looking for.
+		if (country == COUNTRY_CODES[middle])
+			return middle;
+		// else determine if we need to look in the 
+		// left or right half 
+		else if (country < COUNTRY_CODES[middle])
+			// If we need to search the left we reset 
+			// the ending search parameter
+			right = middle - 1;
+		else 
+			// If we need to search the right we
+			// reset the beginning search parameter.
+			left = middle + 1;
+	}
+	return -1; // Country code not found. 
 }
 
 /*
 	Title: readFileMakeMatrix
 	Purpose:  this function will read the data in flights.txt and create an
-	adjacency matrix with the couuntry codes.  The matrix values will be the
+	adjacency matrix with the country codes.  The matrix values will be the
 	cost of the flights.
 */
 GraphMatrix* readFileMakeMatrix()
