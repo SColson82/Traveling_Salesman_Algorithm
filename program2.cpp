@@ -33,15 +33,15 @@ struct Tour
 int searchCountryCode(string);
 GraphMatrix *readFileMakeMatrix();
 void printStringArray(string *arr, int size);
-void lexicographicCountryPermute(string *countries, Tour *tourOptions, int &numTours);
-// saveTour Function
-// findLowest function
+void lexicographicCountryPermute(string *countries, int size,Tour *tourOptions, GraphMatrix* matrix);
+void saveTour(Tour* tourOptions, string* tour, int cost, int& currentIndex);
+void findLowest(Tour* tourOptions);
 
 int main()
 {
 	Tour *tourOptions = new Tour[40320];
 	// read in the flight information from the file and then create the weight matrix
-	// GraphMatrix * matrix = readFileMakeMatrix();
+	GraphMatrix * matrix = readFileMakeMatrix();
 	string *countries = new string[SIZE - 2];
 
 	cout << "\n\n*************************COUNTRIES*******************\n";
@@ -53,8 +53,9 @@ int main()
 
 	// generate all possible tours (starting & ending with "US") using lexicographic permute algorithm
 	// you will need to call your lexicographic function, sending the modified countries array with the 8 country codes
-	int numTours = 0;
-	lexicographicCountryPermute(countries, tourOptions, numTours);
+	lexicographicCountryPermute(countries, SIZE - 2, tourOptions, matrix);
+
+	findLowest(tourOptions);
 
 	cout << "\n\n*************************SOLUTION*******************\n";
 	// find the lowest cost tour and print it out (including the cost)
@@ -64,6 +65,7 @@ int main()
 	// don't forget to release anything that was dynamically allocated!
 	delete[] countries;
 	delete[] tourOptions;
+	delete matrix;
 
 	return 0;
 }
@@ -156,7 +158,7 @@ void printStringArray(string *arr, int size)
 	Title: lexicographicCountryPermute
 	Purpose: generate all country permutations using the lexicographic permutation algorithm
 */
-void lexicographicCountryPermute(string *countries, Tour *tourOptions, int &numTours)
+void lexicographicCountryPermute(string *countries, int size,Tour *tourOptions, GraphMatrix* matrix)
 {
 	// int size = SIZE - 2;
 
@@ -228,4 +230,19 @@ void lexicographicCountryPermute(string *countries, Tour *tourOptions, int &numT
 
 	cout << endl
 		 << endl;
+}
+
+void saveTour(Tour* tourOptions, string* tour, int cost, int& currentIndex)
+{
+	tourOptions[currentIndex].cost = cost;
+	for (int i = 0; i < SIZE; i++)
+	{
+		tourOptions[currentIndex].tour[i]=tour[i];
+	}
+	currentIndex++;
+}
+
+void findLowest(Tour* tourOptions)
+{
+	cout << endl;
 }
