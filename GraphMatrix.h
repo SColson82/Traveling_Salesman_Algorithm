@@ -1,7 +1,7 @@
 /*
 	Title:  	GraphMatrix.h
-	Author:		April R. Crockett
-	Date:		February 24, 2022
+	Author:		Sharon Colson
+	Date:		November 2023
 	Purpose:	Adjacency matrix for representing a graph
 */
 
@@ -9,7 +9,7 @@
 #define GRAPHMATRIX_H
 
 #include <iostream>
-#inlcude <climits>
+#include <climits>
 using namespace std;
 
 class GraphMatrix
