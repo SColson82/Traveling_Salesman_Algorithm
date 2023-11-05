@@ -244,5 +244,16 @@ void saveTour(Tour* tourOptions, string* tour, int cost, int& currentIndex)
 
 void findLowest(Tour* tourOptions)
 {
-	cout << endl;
+	int lowestCost = tourOptions[0].cost;
+	int index = 0;
+	for (int i = 1; i < 40320; i++)
+	{
+		if(tourOptions[i].cost < lowestCost)
+		{
+			lowestCost = tourOptions[i].cost;
+			index = i;
+		}
+	}
+	cout << "New Lowest is: " << lowestCost << " with tour ";
+	printStringArray(tourOptions[index].tour, SIZE);
 }
