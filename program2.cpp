@@ -30,12 +30,13 @@ struct Tour
 int searchCountryCode(string);
 GraphMatrix* readFileMakeMatrix();
 void printStringArray(string* arr, int size);
+void lexicographicCountryPermute(string* countries, Tour* tourOptions, int& numTours);
 
 int main()
 {	
-	// Tour *tourOptions = new Tour[40320];
+	Tour *tourOptions = new Tour[40320];
 	//read in the flight information from the file and then create the weight matrix
-	// GraphMatrix * matrix = readFileMakeMatrix();
+	GraphMatrix * matrix = readFileMakeMatrix();
 	string * countries = new string[SIZE-2];
 	
 	cout << "\n\n*************************COUNTRIES*******************\n";
@@ -48,6 +49,8 @@ int main()
 	
 	//generate all possible tours (starting & ending with "US") using lexicographic permute algorithm
 	//you will need to call your lexicographic function, sending the modified countries array with the 8 country codes
+	int numTours =0;
+	lexicographicCountryPermute(countries, tourOptions, numTours);
 	
 	cout << "\n\n*************************SOLUTION*******************\n";
 	//find the lowest cost tour and print it out (including the cost)
@@ -144,4 +147,13 @@ void printStringArray(string* arr, int size)
 		cout << arr[x] << " ";
 	}
 	cout << endl;
+}
+
+/*
+	Title: lexicographicCountryPermute
+	Purpose: generate all country permutations using the lexicographic permutation algorithm
+*/
+void lexicographicCountryPermute(string* countries, Tour* tourOptions, int& numTours)
+{
+	cout << "Do something here.";
 }
