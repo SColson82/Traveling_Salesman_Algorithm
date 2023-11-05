@@ -160,76 +160,74 @@ void printStringArray(string *arr, int size)
 */
 void lexicographicCountryPermute(string *countries, int size,Tour *tourOptions, GraphMatrix* matrix)
 {
-	// int size = SIZE - 2;
-
-	// // Create temp string to store the country codes
-	// string tempString = "";
-
-	// bool isDone = false;
-	// int lowBound = 0;
-	// int uppBound = 0;
-
-	// // Temporary variables to store during a swap
-	// char tempChar;
-	// string swapString;
 
 	cout << "\n\n\nLEXICOGRAPHIC ALGORITHM\n";
 
-	// for (int i = 0; i < size; i++)
-	// {
-	// 	tempString += countries[i];
-	// }
-	// while (!isDone)
-	// {
-	// 	for(int i = 0; i < size-1; i++)
-	// 	{
-	// 		tourOptions[numTours].tour[i] = countries[i];
-	// 	}
-	// 	tourOptions[numTours].tour[size] = "US";
-	// 	numTours++;
+	int currentIndex = 0;
+	string* currentTour = new string[SIZE];
 
-	// 	// Find lowBound or determine if done
-	// 	isDone = true;
-	// 	for(int i = 0; i < size - 1; i++)
-	// 	{
-	// 		if (countries[i] < countries[i + 1])
-	// 		{
-	// 			isDone = false;
-	// 			lowBound = i;
-	// 		}
-	// 	}
-	// 	if (isDone)
-	// 		continue;
-		
-	// 	// Find uppBound
-	// 	for(int j = size-1; j>0; j--)
-	// 	{
-	// 		if(countries[j] > countries[lowBound])
-	// 		{
-	// 			uppBound = j;
-	// 			break;
-	// 		}
-	// 	}		
+	currentTour[0]= "US";
+	currentTour[SIZE -1] = "US";
 
-	// 	// Swap
-	// 	tempChar = countries[lowBound][0];
-	// 	countries[lowBound][0] = countries[uppBound][0];
-	// 	countries[uppBound][0] = tempChar;
+	for(int i = 1; i <= size; i++)
+	{
+		currentTour[i] = countries[i - 1];
+	}
 
-	// 	// Reverse elements from lowBound+1 TO l-1
-	// 	swapString = "";
-	// 	for(int i = size;i > lowBound;i--)
-	// 	{
-	// 		swapString += countries[i];
-	// 	}
-	// 	for(int i = 0; i < size - lowBound; i++)
-	// 	{
-	// 		countries[lowBound+i] = swapString[i];
-	// 	}		
-	// }
+	bool isDone = false;
 
+	while(!isDone)
+	{
+		int cost = 0;
+		for (int i =0; i<SIZE-1; i++)
+		{
+			int fromIndex = searchCountryCode(currentTour[i]);
+			int toIndex = searchCountryCode(currentTour[i + 1]);
+			cost += matrix->getWeight(fromIndex, toIndex);
+		}
+
+		saveTour(tourOptions, currentTour, cost, currentIndex);
+
+		isDone = true;
+		for (int i = 1; i < size; i++)
+		{
+			if (currentTour[i] < currentTour[i+1])
+			{
+				isDone=false;
+				int lowBound = i;
+				int uppBound = 0;
+
+				for (int j = size; j > 0; j--)
+				{
+					if (currentTour[j] > currentTour[lowBound])
+					{
+						uppBound = j;
+						break;
+					}
+				}
+
+				string tempString = currentTour[lowBound];
+				currentTour[lowBound] = currentTour[uppBound];
+				currentTour[uppBound] = tempString;
+
+				string* swapTour = new string[SIZE];
+				for (int j =1; j < size - lowBound; j++)
+				{
+					tempString = swapTour[lowBound + j];
+					currentTour[lowBound + j] = swapTour[size - j];
+					currentTour[size - j] = tempString;
+				}
+				delete[] swapTour;
+				break;
+
+
+			}
+		}
+	}
 	cout << endl
 		 << endl;
+
+	delete[] currentTour;
 }
 
 void saveTour(Tour* tourOptions, string* tour, int cost, int& currentIndex)
