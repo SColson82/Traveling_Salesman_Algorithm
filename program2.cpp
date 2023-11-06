@@ -42,6 +42,7 @@ int main()
 	Tour *tourOptions = new Tour[40320];
 	// read in the flight information from the file and then create the weight matrix
 	GraphMatrix * matrix = readFileMakeMatrix();
+
 	string *countries = new string[SIZE - 2];
 
 	cout << "\n\n*************************COUNTRIES*******************\n";
@@ -53,13 +54,14 @@ int main()
 
 	// generate all possible tours (starting & ending with "US") using lexicographic permute algorithm
 	// you will need to call your lexicographic function, sending the modified countries array with the 8 country codes
-	lexicographicCountryPermute(countries, SIZE - 2, tourOptions, matrix);
+	// lexicographicCountryPermute(countries, SIZE - 2, tourOptions, matrix);
 
-	findLowest(tourOptions);
+	
 
 	cout << "\n\n*************************SOLUTION*******************\n";
+	lexicographicCountryPermute(countries, SIZE - 2, tourOptions, matrix);
 	// find the lowest cost tour and print it out (including the cost)
-
+	//findLowest(tourOptions);
 	cout << "\nHappy Traveling!\n";
 
 	// don't forget to release anything that was dynamically allocated!
@@ -80,27 +82,38 @@ int main()
 int searchCountryCode(string country)
 {
 	// Set the starting search parameter
+	//cout << "At line SearchCountryCode: 83."<< endl;
 	int left = 0;
 	// Set the ending search parameter
-	int right = SIZE - 3; // Excluding US and we only
+	int right = SIZE - 1; // Excluding US and we only
 	// want to search n - 1.
 	while (left <= right)
 	{ // find the mid-point
 		int middle = left + (right - left) / 2;
+	//	cout << "middle = " << middle;
 		// Check to verify if the mid-point is
 		// the country code we are looking for.
 		if (country == COUNTRY_CODES[middle])
+		{
+	//		cout << "IF";
 			return middle;
+		}
 		// else determine if we need to look in the
 		// left or right half
 		else if (country < COUNTRY_CODES[middle])
+			{
+	//		cout << "else if";
 			// If we need to search the left we reset
 			// the ending search parameter
 			right = middle - 1;
+			}
 		else
+			{
+	//		cout << "else";
 			// If we need to search the right we
 			// reset the beginning search parameter.
 			left = middle + 1;
+			}
 	}
 	return -1; // Country code not found.
 }
@@ -124,10 +137,14 @@ GraphMatrix *readFileMakeMatrix()
 	{
 		while (inFile >> country1)
 		{
+			
 			inFile >> country2;
+			
 			inFile >> price;
+	//		cout << "At line 131";
 			// add price to graph matrix
 			matrix->addEdge(searchCountryCode(country1), searchCountryCode(country2), price);
+	//		cout << "At line 134";
 			cout << "\nAdded edge from " << country1 << " to " << country2 << " with cost of $" << price;
 		}
 	}
