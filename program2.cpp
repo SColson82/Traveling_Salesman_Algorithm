@@ -61,7 +61,7 @@ int main()
 	cout << "\n\n*************************SOLUTION*******************\n";
 	lexicographicCountryPermute(countries, SIZE - 2, tourOptions, matrix);
 	// find the lowest cost tour and print it out (including the cost)
-	//findLowest(tourOptions);
+	findLowest(tourOptions);
 	cout << "\nHappy Traveling!\n";
 
 	// don't forget to release anything that was dynamically allocated!
@@ -168,30 +168,32 @@ void printStringArray(string *arr, int size)
 	{
 		cout << arr[x] << " ";
 	}
-	cout << endl;
+	// cout << endl;
 }
 
 /*
 	Title: lexicographicCountryPermute
 	Purpose: generate all country permutations using the lexicographic permutation algorithm
 */
-void lexicographicCountryPermute(string *countries, int size,Tour *tourOptions, GraphMatrix* matrix)
+void lexicographicCountryPermute(string *countries, int size, Tour *tourOptions, GraphMatrix* matrix)
 {
 
 	cout << "\n\n\nLEXICOGRAPHIC ALGORITHM\n";
-
 	int currentIndex = 0;
+
 	string* currentTour = new string[SIZE];
 
 	currentTour[0]= "US";
-	currentTour[SIZE -1] = "US";
+	currentTour[SIZE - 1] = "US";
 
 	for(int i = 1; i <= size; i++)
 	{
 		currentTour[i] = countries[i - 1];
+	
 	}
 
 	bool isDone = false;
+	int permutationCount = 0;
 
 	while(!isDone)
 	{
@@ -202,42 +204,39 @@ void lexicographicCountryPermute(string *countries, int size,Tour *tourOptions, 
 			int toIndex = searchCountryCode(currentTour[i + 1]);
 			cost += matrix->getWeight(fromIndex, toIndex);
 		}
-
+		
 		saveTour(tourOptions, currentTour, cost, currentIndex);
 
-		isDone = true;
+		cout << permutationCount + 1 << ": ";
+		printStringArray(currentTour, SIZE);
+		cout << "has tour weight: " << cost << endl;
+
+		permutationCount++;
+
+		int k = -1;
 		for (int i = 1; i < size; i++)
 		{
+
 			if (currentTour[i] < currentTour[i+1])
+				k = i;
+		}
+		if (k==-1)
+		{
+			isDone = true;
+		}
+		else
+		{
+			int l = -1;
+			for (int i = 1; i <= size; i++)
 			{
-				isDone=false;
-				int lowBound = i;
-				int uppBound = 0;
+				if(currentTour[k]< currentTour[i])
+				l = i;
+			}
+			swap(currentTour[k], currentTour[l]);
 
-				for (int j = size; j > 0; j--)
-				{
-					if (currentTour[j] > currentTour[lowBound])
-					{
-						uppBound = j;
-						break;
-					}
-				}
-
-				string tempString = currentTour[lowBound];
-				currentTour[lowBound] = currentTour[uppBound];
-				currentTour[uppBound] = tempString;
-
-				string* swapTour = new string[SIZE];
-				for (int j =1; j < size - lowBound; j++)
-				{
-					tempString = swapTour[lowBound + j];
-					currentTour[lowBound + j] = swapTour[size - j];
-					currentTour[size - j] = tempString;
-				}
-				delete[] swapTour;
-				break;
-
-
+			for(int i = k + 1, j = size; i<j; i++, j--)
+			{
+				swap(currentTour[i], currentTour[j]);
 			}
 		}
 	}
