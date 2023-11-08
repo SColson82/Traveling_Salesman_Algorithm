@@ -56,10 +56,11 @@ int main()
 	// you will need to call your lexicographic function, sending the modified countries array with the 8 country codes
 	// lexicographicCountryPermute(countries, SIZE - 2, tourOptions, matrix);
 
-	cout << "\n\n*************************SOLUTION*******************\n";
 	lexicographicCountryPermute(countries, SIZE - 2, tourOptions, matrix);
+
+	cout << "*************************SOLUTION*******************\n";
 	// find the lowest cost tour and print it out (including the cost)
-	// findLowest(tourOptions);
+	findLowest(tourOptions);
 	cout << "\nHappy Traveling!\n";
 
 	// don't forget to release anything that was dynamically allocated!
@@ -162,7 +163,7 @@ GraphMatrix *readFileMakeMatrix()
 */
 void printStringArray(string *arr, int size)
 {
-	for (int x = 1; x < size-1; x++)
+	for (int x = 1; x < size - 1; x++)
 	{
 		cout << arr[x] << " ";
 	}
@@ -176,7 +177,7 @@ void printStringArray(string *arr, int size)
 void lexicographicCountryPermute(string *countries, int size, Tour *tourOptions, GraphMatrix *matrix)
 {
 
-	cout << "\n\n\nLEXICOGRAPHIC ALGORITHM\n";
+	cout << "\n\nLEXICOGRAPHIC ALGORITHM\n\n";
 	int currentIndex = 0;
 
 	string *currentTour = new string[SIZE];
@@ -197,7 +198,7 @@ void lexicographicCountryPermute(string *countries, int size, Tour *tourOptions,
 		cout << permutationCount + 1 << ": ";
 		printStringArray(currentTour, SIZE);
 		int cost = 0;
-		for (int i = 0; i <= size ; i++)
+		for (int i = 0; i <= size; i++)
 		{
 			int fromIndex = searchCountryCode(currentTour[i]);
 			// cout << fromIndex;
@@ -211,7 +212,7 @@ void lexicographicCountryPermute(string *countries, int size, Tour *tourOptions,
 
 		// cout << permutationCount + 1 << ": ";
 		// printStringArray(currentTour, SIZE);
-		cout << "has tour weight: " << cost << endl;
+		cout << " has tour weight: " << cost << endl;
 
 		permutationCount++;
 
@@ -268,8 +269,14 @@ void findLowest(Tour *tourOptions)
 		{
 			lowestCost = tourOptions[i].cost;
 			index = i;
+			cout << "New Lowest is: " << lowestCost << " with tour US ";
+			printStringArray(tourOptions[index].tour, SIZE);
+			cout << "US" << endl;
 		}
 	}
-	cout << "New Lowest is: " << lowestCost << " with tour ";
-	printStringArray(tourOptions[index].tour, SIZE);
+	cout << "\n\n***************************************************************" << endl;
+	cout << "The tour with the lowest cost of $"<<tourOptions[index].cost << " is US "; printStringArray(tourOptions[index].tour, SIZE);
+	cout << "US";
+	// printStringArray(tourOptions[index].tour, SIZE);
+	
 }
