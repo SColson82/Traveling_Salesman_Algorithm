@@ -33,15 +33,15 @@ struct Tour
 int searchCountryCode(string);
 GraphMatrix *readFileMakeMatrix();
 void printStringArray(string *arr, int size);
-void lexicographicCountryPermute(string *countries, int size,Tour *tourOptions, GraphMatrix* matrix);
-void saveTour(Tour* tourOptions, string* tour, int cost, int& currentIndex);
-void findLowest(Tour* tourOptions);
+void lexicographicCountryPermute(string *countries, int size, Tour *tourOptions, GraphMatrix *matrix);
+void saveTour(Tour *tourOptions, string *tour, int cost, int &currentIndex);
+void findLowest(Tour *tourOptions);
 
 int main()
 {
 	Tour *tourOptions = new Tour[40320];
 	// read in the flight information from the file and then create the weight matrix
-	GraphMatrix * matrix = readFileMakeMatrix();
+	GraphMatrix *matrix = readFileMakeMatrix();
 
 	string *countries = new string[SIZE - 2];
 
@@ -56,12 +56,10 @@ int main()
 	// you will need to call your lexicographic function, sending the modified countries array with the 8 country codes
 	// lexicographicCountryPermute(countries, SIZE - 2, tourOptions, matrix);
 
-	
-
 	cout << "\n\n*************************SOLUTION*******************\n";
 	lexicographicCountryPermute(countries, SIZE - 2, tourOptions, matrix);
 	// find the lowest cost tour and print it out (including the cost)
-	findLowest(tourOptions);
+	// findLowest(tourOptions);
 	cout << "\nHappy Traveling!\n";
 
 	// don't forget to release anything that was dynamically allocated!
@@ -82,7 +80,7 @@ int main()
 int searchCountryCode(string country)
 {
 	// Set the starting search parameter
-	//cout << "At line SearchCountryCode: 83."<< endl;
+	// cout << "At line SearchCountryCode: 83."<< endl;
 	int left = 0;
 	// Set the ending search parameter
 	int right = SIZE - 1; // Excluding US and we only
@@ -90,30 +88,30 @@ int searchCountryCode(string country)
 	while (left <= right)
 	{ // find the mid-point
 		int middle = left + (right - left) / 2;
-	//	cout << "middle = " << middle;
+		//	cout << "middle = " << middle;
 		// Check to verify if the mid-point is
 		// the country code we are looking for.
 		if (country == COUNTRY_CODES[middle])
 		{
-	//		cout << "IF";
+			//		cout << "IF";
 			return middle;
 		}
 		// else determine if we need to look in the
 		// left or right half
 		else if (country < COUNTRY_CODES[middle])
-			{
-	//		cout << "else if";
+		{
+			//		cout << "else if";
 			// If we need to search the left we reset
 			// the ending search parameter
 			right = middle - 1;
-			}
+		}
 		else
-			{
-	//		cout << "else";
+		{
+			//		cout << "else";
 			// If we need to search the right we
 			// reset the beginning search parameter.
 			left = middle + 1;
-			}
+		}
 	}
 	return -1; // Country code not found.
 }
@@ -137,14 +135,14 @@ GraphMatrix *readFileMakeMatrix()
 	{
 		while (inFile >> country1)
 		{
-			
+
 			inFile >> country2;
-			
+
 			inFile >> price;
-	//		cout << "At line 131";
+			//		cout << "At line 131";
 			// add price to graph matrix
 			matrix->addEdge(searchCountryCode(country1), searchCountryCode(country2), price);
-	//		cout << "At line 134";
+			//		cout << "At line 134";
 			cout << "\nAdded edge from " << country1 << " to " << country2 << " with cost of $" << price;
 		}
 	}
@@ -164,7 +162,7 @@ GraphMatrix *readFileMakeMatrix()
 */
 void printStringArray(string *arr, int size)
 {
-	for (int x = 0; x < size; x++)
+	for (int x = 1; x < size-1; x++)
 	{
 		cout << arr[x] << " ";
 	}
@@ -175,40 +173,44 @@ void printStringArray(string *arr, int size)
 	Title: lexicographicCountryPermute
 	Purpose: generate all country permutations using the lexicographic permutation algorithm
 */
-void lexicographicCountryPermute(string *countries, int size, Tour *tourOptions, GraphMatrix* matrix)
+void lexicographicCountryPermute(string *countries, int size, Tour *tourOptions, GraphMatrix *matrix)
 {
 
 	cout << "\n\n\nLEXICOGRAPHIC ALGORITHM\n";
 	int currentIndex = 0;
 
-	string* currentTour = new string[SIZE];
+	string *currentTour = new string[SIZE];
 
-	currentTour[0]= "US";
+	currentTour[0] = "US";
 	currentTour[SIZE - 1] = "US";
 
-	for(int i = 1; i <= size; i++)
+	for (int i = 1; i <= size; i++)
 	{
 		currentTour[i] = countries[i - 1];
-	
 	}
 
 	bool isDone = false;
 	int permutationCount = 0;
 
-	while(!isDone)
+	while (!isDone)
 	{
-		int cost = 0;
-		for (int i =0; i<SIZE-1; i++)
-		{
-			int fromIndex = searchCountryCode(currentTour[i]);
-			int toIndex = searchCountryCode(currentTour[i + 1]);
-			cost += matrix->getWeight(fromIndex, toIndex);
-		}
-		
-		saveTour(tourOptions, currentTour, cost, currentIndex);
-
 		cout << permutationCount + 1 << ": ";
 		printStringArray(currentTour, SIZE);
+		int cost = 0;
+		for (int i = 0; i <= size ; i++)
+		{
+			int fromIndex = searchCountryCode(currentTour[i]);
+			// cout << fromIndex;
+			int toIndex = searchCountryCode(currentTour[i + 1]);
+			int flightCost = matrix->getWeight(fromIndex, toIndex);
+			cout << flightCost << " ";
+			cost += matrix->getWeight(fromIndex, toIndex);
+		}
+
+		saveTour(tourOptions, currentTour, cost, currentIndex);
+
+		// cout << permutationCount + 1 << ": ";
+		// printStringArray(currentTour, SIZE);
 		cout << "has tour weight: " << cost << endl;
 
 		permutationCount++;
@@ -217,10 +219,10 @@ void lexicographicCountryPermute(string *countries, int size, Tour *tourOptions,
 		for (int i = 1; i < size; i++)
 		{
 
-			if (currentTour[i] < currentTour[i+1])
+			if (currentTour[i] < currentTour[i + 1])
 				k = i;
 		}
-		if (k==-1)
+		if (k == -1)
 		{
 			isDone = true;
 		}
@@ -229,12 +231,12 @@ void lexicographicCountryPermute(string *countries, int size, Tour *tourOptions,
 			int l = -1;
 			for (int i = 1; i <= size; i++)
 			{
-				if(currentTour[k]< currentTour[i])
-				l = i;
+				if (currentTour[k] < currentTour[i])
+					l = i;
 			}
 			swap(currentTour[k], currentTour[l]);
 
-			for(int i = k + 1, j = size; i<j; i++, j--)
+			for (int i = k + 1, j = size; i < j; i++, j--)
 			{
 				swap(currentTour[i], currentTour[j]);
 			}
@@ -246,23 +248,23 @@ void lexicographicCountryPermute(string *countries, int size, Tour *tourOptions,
 	delete[] currentTour;
 }
 
-void saveTour(Tour* tourOptions, string* tour, int cost, int& currentIndex)
+void saveTour(Tour *tourOptions, string *tour, int cost, int &currentIndex)
 {
 	tourOptions[currentIndex].cost = cost;
 	for (int i = 0; i < SIZE; i++)
 	{
-		tourOptions[currentIndex].tour[i]=tour[i];
+		tourOptions[currentIndex].tour[i] = tour[i];
 	}
 	currentIndex++;
 }
 
-void findLowest(Tour* tourOptions)
+void findLowest(Tour *tourOptions)
 {
 	int lowestCost = tourOptions[0].cost;
 	int index = 0;
 	for (int i = 1; i < 40320; i++)
 	{
-		if(tourOptions[i].cost < lowestCost)
+		if (tourOptions[i].cost < lowestCost)
 		{
 			lowestCost = tourOptions[i].cost;
 			index = i;
